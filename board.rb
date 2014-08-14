@@ -2,7 +2,9 @@ require "./piece"
 
 class Board
   DISPLAY_HASH = {
-    nil => 
+    nil => "_",
+    :black => "X",
+    :white => "O"
   }
 
   def initialize(setup = true)
@@ -23,13 +25,18 @@ class Board
   end
 
   def display
-    print "    |  1  2  3  4  5  6  7"
+    print "  | 1  2  3  4  5  6  7  8"
     puts
+    puts  "--------------------------"
 
     @grid.each_with_index do |row, id|
       print "#{(id + "a".ord).chr} |"
       row.each do |tile|
-        print " #{DISPLAY_HASH[tile.]} "
+        if tile.nil?
+          print " _ "
+        else
+          print " #{DISPLAY_HASH[tile.color]} "
+        end
       end
       puts
     end
