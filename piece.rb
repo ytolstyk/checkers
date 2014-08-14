@@ -9,13 +9,16 @@ class Piece
   end
 
   def perform_slide(pos_from, pos_to)
-
+    self.pos = pos_to
+    @board[pos_to] = self
+    @board[pos_from] = nil
   end
 
   def perform_jump(pos_from, pos_to)
-  end
-
-  def promote?
+    self.pos = pos_to
+    @board[pos_to] = self
+    @board[pos_from] = nil
+    @board.remove_enemy(pos_from, pos_to)
   end
 
   def move_diffs
@@ -28,9 +31,8 @@ class Piece
     all_moves = []
     x, y = @pos
     move_diffs.each do |diff|
-      new_x = x + diff[0]
-      new_y = y + diff[1]
-      all_moves << [new_x, new_y] if @board.on_board?([new_x, new_y])
+      new_pos = [x + diff[0], y + diff[1]]
+      all_moves << new_pos if @board.on_board?(new_pos)
     end
     all_moves = remove_blocked(all_moves)
     all_moves += jump_moves

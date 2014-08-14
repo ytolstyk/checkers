@@ -41,7 +41,7 @@ puts "6. White jumps over black or slides"
 b = Board.new(false)
 p1 = Piece.new([7, 5], :white, b)
 p2 = Piece.new([6, 6], :black, b)
-b[[7, 7]] = p1
+b[[7, 5]] = p1
 b[[6, 6]] = p2
 
 puts p1.valid_moves.include?([5, 7]) && p1.valid_moves.include?([6, 4])
@@ -56,3 +56,21 @@ p1.king = true if p1.promote?
 p2.king = true if p2.promote?
 
 puts p1.king == true && p2.king == true
+
+puts "8. Performs slides (unvalidated)"
+b = Board.new(false)
+p1 = Piece.new([7, 5], :white, b)
+b[[7, 5]] = p1
+p1.perform_slide([7, 5], [6, 6])
+
+puts b[[7, 5]] == nil && b[[6, 6]] == p1 && p1.pos == [6, 6]
+
+puts "9. Performs jump and removes enemy"
+b = Board.new(false)
+p1 = Piece.new([7, 7], :white, b)
+p2 = Piece.new([6, 6], :black, b)
+b[[7, 7]] = p1
+b[[6, 6]] = p2
+p1.perform_jump([7, 7], [5, 5])
+
+puts p1.pos = [5, 5] && b[[6, 6]] == nil

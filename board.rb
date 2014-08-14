@@ -17,6 +17,12 @@ class Board
     #       #complete this
   end
 
+  def remove_enemy(pos_from, pos_to)
+    remove_x = (pos_from[0] + pos_to[0]) / 2
+    remove_y = (pos_from[1] + pos_to[1]) / 2
+    self[[remove_x, remove_y]] = nil
+  end
+
   def on_board?(pos)
     pos.all? { |i| i.between?(0, 7) }
   end
