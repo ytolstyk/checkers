@@ -24,19 +24,12 @@ class Piece
   def valid_move_seq?(move_seq)
     dup_board = @board.dup
     piece_dup = dup_board[@pos]
-    begin
-      move_seq.each do |move|
-        piece_dup.perform_moves!(move)
-      end
-      return true
-    rescue InvalidMoveError => error
-      puts error
-      return false
-    end
+    piece_dup.perform_moves!(move_seq)
+    true
   end
 
   def perform_moves!(move_seq)
-    if move_seq.length == 1 && valid_moves.include?(move_seq[0])
+    if move_seq.length == 1 && valid_slide_moves.include?(move_seq[0])
       perform_slide(move_seq[0])
     else
       move_seq.each do |pos_to|
@@ -44,7 +37,6 @@ class Piece
           perform_jump(pos_to)
         else
           raise InvalidMoveError
-          break
         end
       end
     end
@@ -71,7 +63,7 @@ class Piece
     [[-1, 1], [-1, -1]]
   end
 
-  def valid_moves
+  def valid_slide_moves
     all_moves = []
     x, y = @pos
     move_diffs.each do |diff|
@@ -80,8 +72,12 @@ class Piece
         all_moves << new_pos
       end
     end
-    all_moves += jump_moves
     all_moves
+  end
+
+  def valid_moves
+    slide_moves = valid_slide_moves
+    valid_slide_moves.concat(jump_moves)
   end
 
   def jump_moves(pos = @pos)

@@ -1,8 +1,6 @@
 class InvalidMoveError < StandardError
   def message
-    "You tried to perform an invalid move.\n
-    Start with your piece followed by a sequence of moves.\n
-    ex: a0 c2 e4"
+    "You tried to perform an invalid move."
   end
 end
 

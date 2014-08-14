@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require "./piece"
 
 class Board
@@ -40,6 +41,7 @@ class Board
       end
       puts
     end
+    puts  "--------------------------"
   end
 
   def remove_enemy(pos_from, pos_to)
@@ -84,7 +86,7 @@ class Board
   end
 
   def winner
-    return nil unless game_over?
+    return "nobody" unless game_over?
     return :black if pieces.any? {|piece| piece.color == :black}
     :white
   end

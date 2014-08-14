@@ -10,11 +10,12 @@ class Game
   end
 
   def play
-    until game_over
+    quitting = false
+    until game_over || quitting
       players.each do |player|
         @board.display
-        player.turn(@board)
-        break if game_over
+        quitting = player.turn(@board)
+        break if game_over || quitting
       end
     end
     puts "#{@board.winner.to_s.capitalize} won!"
