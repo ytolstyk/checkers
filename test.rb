@@ -61,16 +61,55 @@ puts "8. Performs slides (unvalidated)"
 b = Board.new(false)
 p1 = Piece.new([7, 5], :white, b)
 b[[7, 5]] = p1
-p1.perform_slide([7, 5], [6, 6])
+p1.perform_slide([6, 6], [7, 5])
 
 puts b[[7, 5]] == nil && b[[6, 6]] == p1 && p1.pos == [6, 6]
 
-puts "9. Performs jump and removes enemy"
+puts "9. Performs jump and removes enemy (unvalidated)"
 b = Board.new(false)
 p1 = Piece.new([7, 7], :white, b)
 p2 = Piece.new([6, 6], :black, b)
 b[[7, 7]] = p1
 b[[6, 6]] = p2
-p1.perform_jump([7, 7], [5, 5])
+p1.perform_jump([5, 5], [7, 7])
 
 puts p1.pos = [5, 5] && b[[6, 6]] == nil
+
+puts "10. performs sequence of jumps"
+b = Board.new(false)
+p1 = Piece.new([7, 7], :white, b)
+p2 = Piece.new([6, 6], :black, b)
+p3 = Piece.new([4, 4], :black, b)
+b[[7, 7]] = p1
+b[[6, 6]] = p2
+b[[4, 4]] = p3
+
+p1.perform_moves!([[5, 5], [3, 3]])
+puts p1.pos == [3, 3]
+
+puts "11. performs slide in sequence"
+b = Board.new(false)
+p1 = Piece.new([7, 7], :white, b)
+b[[7, 7]] = p1
+
+p1.perform_moves!([[6, 6]])
+puts p1.pos == [6, 6]
+
+puts "11. doesn't slide if invalid"
+b = Board.new(false)
+p1 = Piece.new([7, 7], :white, b)
+b[[7, 7]] = p1
+
+p1.perform_moves!([[5, 5]])
+puts p1.pos == [7, 7]
+
+puts "12. performs single jump sequence"
+b = Board.new(false)
+p1 = Piece.new([7, 7], :white, b)
+p2 = Piece.new([6, 6], :black, b)
+b[[7, 7]] = p1
+b[[6, 6]] = p2
+
+p1.perform_moves!([[5, 5]])
+puts p1.pos == [5, 5]
+

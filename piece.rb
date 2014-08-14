@@ -8,13 +8,23 @@ class Piece
     @king = king
   end
 
-  def perform_slide(pos_from, pos_to)
+  def perform_moves!(move_seq)
+    if move_seq.length == 1 && valid_moves.include?(move_seq[0])
+      perform_slide(move_seq[0])
+    else
+      move_seq.each do |pos_to|
+        perform_jump(pos_to) if valid_moves.include?(pos_to)
+      end
+    end
+  end
+
+  def perform_slide(pos_to, pos_from = @pos)
     self.pos = pos_to
     @board[pos_to] = self
     @board[pos_from] = nil
   end
 
-  def perform_jump(pos_from, pos_to)
+  def perform_jump(pos_to, pos_from = @pos)
     self.pos = pos_to
     @board[pos_to] = self
     @board[pos_from] = nil
@@ -32,9 +42,10 @@ class Piece
     x, y = @pos
     move_diffs.each do |diff|
       new_pos = [x + diff[0], y + diff[1]]
-      all_moves << new_pos if @board.on_board?(new_pos)
+      if @board.on_board?(new_pos) && @board[new_pos].nil?
+        all_moves << new_pos
+      end
     end
-    all_moves = remove_blocked(all_moves)
     all_moves += jump_moves
     all_moves
   end
@@ -57,12 +68,6 @@ class Piece
     new_x, new_y = x + diff[0], y + diff[1]
     return [new_x, new_y] if @board.on_board?([new_x, new_y])
     nil
-  end
-
-  def remove_blocked(all_moves)
-    all_moves.select do |pos|
-      @board[pos].nil?
-    end
   end
 
   def promote?
