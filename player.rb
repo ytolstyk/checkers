@@ -1,4 +1,3 @@
-#require "./error.rb"
 
 class Player
   attr_accessor :color
@@ -17,16 +16,16 @@ class Player
       piece = move_seq.shift
       @board[piece].perform_moves(move_seq)
     rescue InvalidMoveError => error
-      puts error
+      puts error.message
       retry
     rescue InvalidCoordinates => error
-      puts error
+      puts error.message
       retry
     rescue InvalidPiece => error
-      puts error
+      puts error.message
       retry
     rescue InvalidMoveError => error
-      puts error
+      puts error.message
       retry
     end
 

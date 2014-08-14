@@ -1,9 +1,11 @@
 # encoding: UTF-8
 require "./piece"
+require "colorize"
 
 class Board
   DISPLAY_HASH = {
-    nil => "_",
+    nil => " ".colorize(:background => :white),
+    :bb => " ".colorize(:background => :black),
     :black => "X",
     :white => "O"
   }
@@ -26,22 +28,28 @@ class Board
   end
 
   def display
-    print "  | 1  2  3  4  5  6  7  8"
+    print "  |12345678"
     puts
-    puts  "--------------------------"
+    puts  "-----------"
 
     @grid.each_with_index do |row, id|
       print "#{(id + "a".ord).chr} |"
-      row.each do |tile|
-        if tile.nil?
-          print " _ "
+      row.each_with_index do |tile, id2|
+        if tile.nil? && (id + id2).even?
+          print "#{DISPLAY_HASH[:bb]}"
+        elsif tile.nil?  
+          print "#{DISPLAY_HASH[nil]}"
         else
-          print " #{DISPLAY_HASH[tile.color]} "
+          if (id + id2).even?
+            print "#{DISPLAY_HASH[tile.color]}".colorize(:background => :black)
+          else
+            print "#{DISPLAY_HASH[title.color]}".colorize(:bakcground => :white)
+          end
         end
       end
       puts
     end
-    puts  "--------------------------"
+    puts  "-----------"
   end
 
   def remove_enemy(pos_from, pos_to)
