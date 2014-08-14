@@ -21,6 +21,10 @@ class Board
     pos.all? { |i| i.between?(0, 7) }
   end
 
+  def empty?(pos)
+    self[pos].nil?
+  end
+
   def [](pos)
     x, y = pos
     @grid[x][y]
