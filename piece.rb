@@ -1,3 +1,4 @@
+require "./errors.rb"
 
 class Piece
   attr_accessor :pos, :color, :king
@@ -8,12 +9,43 @@ class Piece
     @king = king
   end
 
+  def inspect
+    self.color.to_s[0]
+  end
+
+  def perform_moves(move_seq)
+    if valid_move_seq?(move_seq)
+      perform_moves!(move_seq)
+    else
+      raise InvalidMoveError
+    end
+  end
+
+  def valid_move_seq?(move_seq)
+    dup_board = @board.dup
+    piece_dup = dup_board[@pos]
+    begin
+      move_seq.each do |move|
+        piece_dup.perform_moves!(move)
+      end
+      return true
+    rescue InvalidMoveError => error
+      puts error
+      return false
+    end
+  end
+
   def perform_moves!(move_seq)
     if move_seq.length == 1 && valid_moves.include?(move_seq[0])
       perform_slide(move_seq[0])
     else
       move_seq.each do |pos_to|
-        perform_jump(pos_to) if valid_moves.include?(pos_to)
+        if valid_moves.include?(pos_to)
+          perform_jump(pos_to)
+        else
+          raise InvalidMoveError
+          break
+        end
       end
     end
   end
@@ -21,12 +53,14 @@ class Piece
   def perform_slide(pos_to, pos_from = @pos)
     self.pos = pos_to
     @board[pos_to] = self
+    @king = true if promote?
     @board[pos_from] = nil
   end
 
   def perform_jump(pos_to, pos_from = @pos)
     self.pos = pos_to
     @board[pos_to] = self
+    @king = true if promote?
     @board[pos_from] = nil
     @board.remove_enemy(pos_from, pos_to)
   end
